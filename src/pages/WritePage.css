@@ -1,0 +1,9 @@
+.mainbox {
+    width: 100vw;
+    background-color : "#E6E6FA";
+}
+
+.inputRounded .MuiOutlinedInput-root {
+    border-radius: 20px;
+  }
+  
