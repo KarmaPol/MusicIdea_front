@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./WritePage.css";
 import Mypiano from "../components/MyPiano";
+import { motion } from "framer-motion";
 
 export default function WritePage() {
   const [title, setTitle] = useState("");
@@ -25,50 +26,66 @@ export default function WritePage() {
         padding: "50px",
         boxSizing: "border-box",
         display: "flex",
+
         justifyContent: "center",
       }}
     >
-      <Box
-        className="mainbox"
-        sx={{
-          width: "1400px",
-          minHeight: "2000px",
-          //   border: 1,
-          backgroundColor: "#ffffff",
-          borderRadius: "30px",
-          display: "flex",
-          justifyContent: "center",
+      <motion.div
+        className={"bulletin"}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.5,
+          ease: [0, 0.71, 0.2, 1.01],
         }}
       >
-        <Stack
-          spacing={10}
+        <Box
+          className="mainbox"
           sx={{
+            width: "1000px",
+            minHeight: "2000px",
+            //   border: 1,
+            backgroundColor: "#ffffff",
+            boxShadow: "0px 0px 20px -10px #000",
+
+            borderRadius: "30px",
             display: "flex",
-            mt: "50px",
-            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Box
+          <Stack
+            spacing={10}
             sx={{
-              width: "600px",
+              display: "flex",
+              mt: "50px",
+              alignItems: "center",
             }}
           >
-            <TextField
-              className="inputRounded"
-              onChange={(e) => setTitle(e.target.value)}
-              fullWidth
-              id="title"
-              name="title"
-              label="제목"
-              variant="outlined"
-            ></TextField>
-          </Box>
-          <Mypiano />
-          <Button variant="contained" sx={{ fontSize: 24 }}>
-            작성 완료
-          </Button>
-        </Stack>
-      </Box>
+            <Box
+              sx={{
+                width: "600px",
+              }}
+            >
+              <TextField
+                className="inputRounded"
+                onChange={(e) => setTitle(e.target.value)}
+                fullWidth
+                id="title"
+                name="title"
+                label="제목"
+                variant="outlined"
+              ></TextField>
+            </Box>
+            <Mypiano />
+            <motion.div whileHover={{ scale: 1.1 }}>
+              <Button variant="contained" sx={{ fontSize: 24 }}>
+                작성 완료
+              </Button>
+            </motion.div>
+          </Stack>
+        </Box>
+      </motion.div>
     </Box>
   );
 }

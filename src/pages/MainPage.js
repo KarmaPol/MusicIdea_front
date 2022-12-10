@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./WritePage.css";
 import Bulletin from "../components/Bulletin";
+import { motion } from "framer-motion";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -37,8 +38,8 @@ export default function MainPage() {
         sx={{
           width: "1400px",
           minHeight: "2000px",
-          //   border: 1,
-          backgroundColor: "#ffffff",
+          // border: 1,
+          // backgroundColor: "#ffffff",
           borderRadius: "30px",
           display: "flex",
           justifyContent: "center",
@@ -47,34 +48,77 @@ export default function MainPage() {
         <Stack
           spacing={3}
           sx={{
+            width: "1000px",
             mt: "24px",
           }}
         >
           <Box
             sx={{
+              borderRadius: "10px",
+              padding: "10px",
+              boxSizing: "border-box",
+              backgroundColor: "#ffffff",
               display: "flex",
-              flexDirection: "row-reverse",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              boxShadow: "0px 0px 20px -10px #000",
             }}
           >
-            <Button
-              variant="contained"
-              sx={{ fontSize: 24 }}
-              onClick={onClickPostButton}
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              작성
-            </Button>
+              <Avatar />
+              <Typography variant="h5">user</Typography>
+            </Stack>
+
+            <motion.div whileHover={{ scale: 1.1 }}>
+              <Button
+                variant="contained"
+                sx={{ fontSize: 24 }}
+                onClick={onClickPostButton}
+              >
+                작성
+              </Button>
+            </motion.div>
           </Box>
-          <Stack direction="row" spacing={5}>
+          <Stack
+            direction="row"
+            spacing={6}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <Bulletin />
             <Bulletin />
             <Bulletin />
           </Stack>
-          <Stack direction="row" spacing={5}>
+          <Stack
+            direction="row"
+            spacing={6}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <Bulletin />
             <Bulletin />
             <Bulletin />
           </Stack>
-          <Stack direction="row" spacing={5}>
+          <Stack
+            direction="row"
+            spacing={6}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <Bulletin />
             <Bulletin />
             <Bulletin />
