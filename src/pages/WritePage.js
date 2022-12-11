@@ -127,7 +127,7 @@ export default function WritePage() {
           className="mainbox"
           sx={{
             width: "1000px",
-            minHeight: "2000px",
+            height: "1000px",
             //   border: 1,
             backgroundColor: "#ffffff",
             boxShadow: "0px 0px 20px -10px #000",
