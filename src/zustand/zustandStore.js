@@ -32,8 +32,8 @@ export const zustandStore = create((set, get) => ({
     axios.post("http://3.37.33.149/user/signup", _account);
   },
   /**게시물 9개 받기 */
-  getPosts: async () => {
-    const posts = await axios.get("http://3.37.33.149/posts");
+  getPosts: async (_nextURL) => {
+    const posts = await axios.get(_nextURL || "http://3.37.33.149/posts");
 
     return posts;
   },
@@ -45,7 +45,7 @@ export const zustandStore = create((set, get) => ({
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-        //   withCredentials: true,
+        withCredentials: false,
         "Content-Type": "multipart/form-data;",
       },
     };

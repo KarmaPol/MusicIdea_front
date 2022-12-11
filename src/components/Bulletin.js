@@ -19,7 +19,6 @@ import Comment from "./Commnt";
 export default function Bulletin(props) {
   const [commentClicked, setCommentClicked] = useState(false);
 
-  console.log(props);
   return (
     <>
       <motion.div

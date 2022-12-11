@@ -7,3 +7,8 @@
     border-radius: 20px;
   }
   
+.mainbox2 {
+
+    display : "flex";
+
+}

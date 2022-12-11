@@ -14,6 +14,7 @@ import "./WritePage.css";
 import Bulletin from "../components/Bulletin";
 import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
+import { ExpandMore } from "@mui/icons-material";
 
 export default function MainPage() {
   const getPosts = zustandStore((state) => state.getPosts);
@@ -22,28 +23,48 @@ export default function MainPage() {
     localStorage.getItem("userName") || null
   );
 
+  const [nextURL, setNextURL] = useState(null);
+  const [nextButtonClicked, setNextButtonClicked] = useState(false);
+
+  const [posts, setPosts] = useState([]);
+  const [chunkedPosts, setChunkedPosts] = useState([]);
+  const [pageOffset, setPageOffset] = useState([0]);
+
+  console.log(nextURL);
+
   useEffect(() => {
-    getPosts().then((res) => {
-      console.log(res.data);
-      setPosts(res.data.results);
+    getPosts(nextURL).then((res) => {
+      const nextPosts = res.data.results;
+      setNextURL(res.data.next);
+      setPosts((ex) => [...ex, ...nextPosts]);
     });
-  }, []);
+    console.log(posts);
+  }, [nextButtonClicked]);
+  console.log(posts);
+
+  useEffect(() => {
+    setChunkedPosts(chunkArray(posts));
+  }, [posts]);
 
   const onClickLogoutButton = () => {
     cleanUserToken();
     setUserName(null);
   };
 
-  const fetchPosts = async () => {
-    const posts = await getPosts;
-    setPosts(posts);
+  const chunkArray = () => {
+    const temp = [];
+
+    for (let i = 0; i < posts.length; i += 3) {
+      temp.push(posts.slice(i, i + 3));
+    }
+    console.log("chunk", temp);
+
+    return temp;
   };
 
   useEffect(() => {
-    console.log(userName);
+    console.log(posts.slice(pageOffset, pageOffset + 3));
   }, [userName]);
-
-  const [posts, setPosts] = useState([]);
 
   console.log(posts.slice(0, 3));
 
@@ -86,10 +107,13 @@ export default function MainPage() {
           sx={{
             width: "1000px",
             mt: "24px",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           <Box
             sx={{
+              width: "1000px",
               borderRadius: "10px",
               padding: "10px",
               boxSizing: "border-box",
@@ -149,42 +173,63 @@ export default function MainPage() {
               </Button>
             </motion.div>
           </Box>
-          <Stack
-            direction="row"
-            spacing={6}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {posts.slice(0, 3).map((post) => (
-              <Bulletin key={post.id} post={post} />
-            ))}
-          </Stack>
-          <Stack
-            direction="row"
-            spacing={6}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {posts.slice(3, 6).map((post) => (
-              <Bulletin key={post.id} post={post} />
-            ))}
-          </Stack>
-          <Stack
-            direction="row"
-            spacing={6}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {posts.slice(6, 9).map((post) => (
-              <Bulletin key={post.id} post={post} />
-            ))}
-          </Stack>
+
+          {chunkedPosts.map((dividedPosts) => (
+            <Stack
+              direction="row"
+              spacing={6}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {dividedPosts.map((post) => (
+                <Bulletin post={post} />
+              ))}
+            </Stack>
+          ))}
+
+          {nextURL !== null && (
+            <motion.div
+              className={"mainbox2"}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.5,
+                ease: [0, 0.71, 0.2, 1.01],
+              }}
+            >
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Box
+                  sx={{
+                    width: "600px",
+                    borderRadius: "5px",
+                    backgroundColor: "white",
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "20px",
+                  }}
+                >
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      color: "black",
+                      // fontWeight: "bold",
+                      fontSize: "20px",
+                      borderRadius: "20px",
+                    }}
+                    onClick={() => {
+                      setNextButtonClicked((ex) => !ex);
+                    }}
+                  >
+                    more
+                  </Button>
+                </Box>
+              </motion.div>
+            </motion.div>
+          )}
         </Stack>
       </Box>
     </Box>
