@@ -18,9 +18,13 @@ import { motion } from "framer-motion";
 export default function MainPage() {
   const getPosts = zustandStore((state) => state.getPosts);
   const cleanUserToken = zustandStore((state) => state.cleanUserToken);
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName") || null
+  );
 
   const onClickLogoutButton = () => {
     cleanUserToken();
+    setUserName(null);
   };
 
   const fetchPosts = async () => {
@@ -29,8 +33,8 @@ export default function MainPage() {
   };
 
   useEffect(() => {
-    // fetchPosts();
-  }, []);
+    console.log(userName);
+  }, [userName]);
 
   const [posts, setPosts] = useState([
     {
@@ -144,26 +148,34 @@ export default function MainPage() {
                 alignItems: "center",
               }}
             >
-              <Avatar />
-              <Typography variant="h5">user</Typography>
-              <motion.div whileHover={{ scale: 1.1 }}>
-                <Button
-                  variant="contained"
-                  sx={{ fontSize: 15 }}
-                  onClick={onClickLoginButton}
-                >
-                  로그인
-                </Button>
-              </motion.div>{" "}
-              <motion.div whileHover={{ scale: 1.1 }}>
-                <Button
-                  variant="contained"
-                  sx={{ fontSize: 15 }}
-                  onClick={onClickLogoutButton}
-                >
-                  로그아웃
-                </Button>
-              </motion.div>
+              {userName && (
+                <>
+                  <Avatar />
+                  <Typography variant="h5">{userName}</Typography>
+                </>
+              )}
+              {!userName && (
+                <motion.div whileHover={{ scale: 1.1 }}>
+                  <Button
+                    variant="contained"
+                    sx={{ fontSize: 15 }}
+                    onClick={onClickLoginButton}
+                  >
+                    로그인
+                  </Button>
+                </motion.div>
+              )}
+              {userName && (
+                <motion.div whileHover={{ scale: 1.1 }}>
+                  <Button
+                    variant="contained"
+                    sx={{ fontSize: 15 }}
+                    onClick={onClickLogoutButton}
+                  >
+                    로그아웃
+                  </Button>
+                </motion.div>
+              )}
             </Stack>
 
             <motion.div whileHover={{ scale: 1.1 }}>

@@ -5,16 +5,25 @@ export const zustandStore = create((set, get) => ({
   userToken: localStorage.getItem("userToken")
     ? localStorage.getItem("userToken")
     : "not logined",
-  setUserToken: (_token) => {
+
+  setUserToken: async (_token) => {
     set((state) => ({ userToken: _token }));
     localStorage.setItem("userToken", _token);
   },
   getUserToken: async (_account) => {
-    const token = await axios.post("http://3.37.33.149/user/token", _account);
-    return token.data;
+    // userName 저장
+    try {
+      const token = await axios.post("http://3.37.33.149/user/token", _account);
+      localStorage.setItem("userName", _account.name);
+      return token.data;
+    } catch (error) {
+      throw error;
+    }
   },
   cleanUserToken: () => {
     set((state) => ({ userToken: "not logined" }));
+    set((state) => ({ userName: null }));
+
     localStorage.clear();
   },
   userSignUp: async (_account) => {

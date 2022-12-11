@@ -25,10 +25,14 @@ export default function LoginPage() {
   const userSignUp = zustandStore((state) => state.userSignUp);
 
   const onClickLoginButton = async () => {
-    const token = await getUserToken(account);
-    console.log(token);
-    setUserToken(token);
-    navigate("/");
+    try {
+      const token = await getUserToken(account);
+      console.log(token);
+      await setUserToken(token);
+      navigate("/");
+    } catch (error) {
+      alert("로그인 실패");
+    }
   };
 
   const onClickSignupButtion = () => {
