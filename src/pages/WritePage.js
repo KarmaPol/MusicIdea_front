@@ -41,6 +41,11 @@ export default function WritePage() {
 
   const navigate = useNavigate();
 
+  const onSubmitPost = async () => {
+    await submitPost(post);
+    setTimeout(() => navigate("/"), 1000);
+  };
+
   const onRecAudio = () => {
     // 녹음 버튼 클릭시 실행 녹음 시작
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -122,8 +127,6 @@ export default function WritePage() {
     document.getElementById("controller").volume = 0.5;
     const source = document.querySelector("#controller");
     source.src = URL.createObjectURL(input.target.files[0]);
-    // const formData = new FormData();
-    // formData.append("melody", input.target.files[0]);
     setPost({ ...post, melody: input.target.files[0] });
   };
 
@@ -204,7 +207,7 @@ export default function WritePage() {
               <Button
                 variant="contained"
                 sx={{ fontSize: 24 }}
-                onClick={() => submitPost(post)}
+                onClick={onSubmitPost}
               >
                 작성 완료
               </Button>

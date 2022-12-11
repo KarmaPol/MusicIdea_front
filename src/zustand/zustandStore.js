@@ -38,7 +38,7 @@ export const zustandStore = create((set, get) => ({
     return posts;
   },
   /**게시물 작성 */
-  submitPost: (_post) => {
+  submitPost: async (_post) => {
     const token = localStorage.getItem("userToken");
     console.log(token);
 

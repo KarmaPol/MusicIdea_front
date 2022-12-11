@@ -9,7 +9,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./WritePage.css";
 import Bulletin from "../components/Bulletin";
 import { zustandStore } from "../zustand/zustandStore";
@@ -40,7 +40,6 @@ export default function MainPage() {
     });
     console.log(posts);
   }, [nextButtonClicked]);
-  console.log(posts);
 
   useEffect(() => {
     setChunkedPosts(chunkArray(posts));
@@ -209,6 +208,7 @@ export default function MainPage() {
                     display: "flex",
                     alignItems: "center",
                     borderRadius: "20px",
+                    boxShadow: "0px 0px 20px -10px #000",
                   }}
                 >
                   <Button
