@@ -12,8 +12,11 @@ import {
 import Likes from "./Likes";
 import "./Bulletin.css";
 import { motion } from "framer-motion";
+import { zustandStore } from "../zustand/zustandStore";
 
 const Comment = (props) => {
+  const submitComment = zustandStore((state) => state.submitComment);
+
   const [comments, setComments] = useState(
     [
       {
@@ -42,14 +45,16 @@ const Comment = (props) => {
 
   const onSubmitEnter = (e) => {
     if (e.key === "Enter") {
-      setComments([
-        {
-          id: "6",
-          content: comment,
-        },
-        ...comments,
-      ]);
-      setComment("");
+      // setComments([
+      //   {
+      //     id: "6",
+      //     content: comment,
+      //   },
+      //   ...comments,
+      // ]);
+      // setComment("");
+      console.log(props.postID);
+      submitComment(comment, props.postID);
     }
   };
 

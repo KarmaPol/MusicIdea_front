@@ -62,10 +62,10 @@ export default function Bulletin(props) {
                       fontWeight: "bold",
                     }}
                   >
-                    {props.post.postTitle}
+                    {props.post.title}
                   </Typography>
                   <Typography variant="subtitle2">
-                    {props.post.authorID}
+                    {props.post.author}
                   </Typography>
                 </Stack>
 
@@ -85,7 +85,12 @@ export default function Bulletin(props) {
                       alignItems: "center",
                     }}
                   >
-                    <audio className="audio" controls src />
+                    <audio
+                      className="audio"
+                      id="controller"
+                      controls
+                      src={props.post.melody}
+                    />
                   </Box>
                 </motion.div>
                 <Stack
@@ -126,7 +131,7 @@ export default function Bulletin(props) {
                   }}
                 />
               )}
-              {commentClicked && <Comment postID={props.post.postID} />}
+              {commentClicked && <Comment postID={props.post.id} />}
             </Stack>
           </Box>
         </motion.div>

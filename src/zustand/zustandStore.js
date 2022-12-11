@@ -2,14 +2,12 @@ import create from "zustand";
 import axios from "axios";
 
 export const zustandStore = create((set, get) => ({
-  userToken: localStorage.getItem("userToken")
-    ? localStorage.getItem("userToken")
-    : null,
+  userToken: localStorage.getItem("userToken"),
 
   /**토큰 저장 */
   setUserToken: async (_token) => {
-    set((state) => ({ userToken: _token }));
-    localStorage.setItem("userToken", _token);
+    set((state) => ({ userToken: _token.access }));
+    localStorage.setItem("userToken", _token.access);
   },
   /**로그인 */
   getUserToken: async (_account) => {
@@ -24,7 +22,7 @@ export const zustandStore = create((set, get) => ({
   },
   /**로그아웃 */
   cleanUserToken: () => {
-    set((state) => ({ userToken: "not logined" }));
+    set((state) => ({ userToken: null }));
     set((state) => ({ userName: null }));
 
     localStorage.clear();
@@ -35,27 +33,49 @@ export const zustandStore = create((set, get) => ({
   },
   /**게시물 9개 받기 */
   getPosts: async () => {
-    const response = await axios.get("주소");
+    const posts = await axios.get("http://3.37.33.149/posts");
 
-    return response;
+    return posts;
   },
   /**게시물 작성 */
-  submitPost: async (_post) => {
+  submitPost: (_post) => {
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+
     const config = {
-      Authorization: `Bearer ${get().userToken.access}`,
+      Authorization: `Bearer ${token}`,
+      //   withCredentials: true,
+      "Content-Type": "multipart/form-data;",
     };
 
     console.log(config);
 
-    axios.post("주소", _post, config);
+    console.log(_post);
+    const formData = new FormData();
+
+    formData.append("title", _post.title);
+    formData.append("melody", _post.melody);
+    console.log(formData);
+
+    axios.post("http://3.37.33.149/post", formData, config);
   },
   /**댓글 작성 */
-  submitComment: async (_comment) => {
-    const config = {
-      Authorization: "Token " + get().userToken,
-    };
+  submitComment: (_comment, _post_id) => {
+    const token = localStorage.getItem("userToken");
+    console.log(token);
 
-    axios.post("주소", _comment, config);
+    const config = {
+      Authorization: `Bearer ${token}`,
+      withCredentials: true,
+    };
+    console.log(_comment);
+    axios.post(
+      `http://3.37.33.149/post/${_post_id}/comment`,
+      {
+        content: _comment,
+      },
+      config
+    );
   },
   /**댓글 삭제 */
   deleteComment: async (_commentID) => {

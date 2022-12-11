@@ -11,12 +11,11 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./WritePage.css";
-import Mypiano from "../components/MyPiano";
+// import Mypiano from "../components/MyPiano";
 import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
 
 export default function WritePage() {
-  const [title, setTitle] = useState("");
   const [stream, setStream] = useState();
   const [media, setMedia] = useState();
   const [onRec, setOnRec] = useState(true);
@@ -27,18 +26,23 @@ export default function WritePage() {
 
   const getUserToken = zustandStore((state) => state.getUserToken);
 
-  const [posts, setPosts] = useState([
-    {
-      title: title,
-      melody: sound,
-    },
-  ]);
+  const [post, setPost] = useState({
+    title: "",
+    melody: null,
+  });
+
+  const onChangeTitle = (e) => {
+    setPost({ ...post, title: e.target.value });
+  };
+
+  useEffect(() => console.log(post), [post]);
 
   const submitPost = zustandStore((state) => state.submitPost);
 
   const navigate = useNavigate();
 
-  const onRecAudio = () => { // 녹음 버튼 클릭시 실행 녹음 시작
+  const onRecAudio = () => {
+    // 녹음 버튼 클릭시 실행 녹음 시작
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const analyser = audioCtx.createScriptProcessor(0, 1, 1);
     setAnalyser(analyser);
@@ -79,15 +83,18 @@ export default function WritePage() {
     });
   };
 
-  const offRecAudio = () => { // 중단 버튼 클릭 시 함수 실행 녹음 종료
+  const offRecAudio = () => {
+    // 중단 버튼 클릭 시 함수 실행 녹음 종료
     document.getElementById("recordBtn").textContent = "녹음";
 
-    media.ondataavailable = function (e) { // e.data : 녹음된 파일 데이터로 보시면 됩니다
+    media.ondataavailable = function (e) {
+      // e.data : 녹음된 파일 데이터로 보시면 됩니다
       audioUrl.current = e.data;
       document.getElementById("controller").volume = 0.5; // 92 ~ 94번째 줄은 uploadFile과 같이 녹음된 파일을 audio controls에서 재생할 수 있도록 한다
       const source = document.querySelector("#controller");
       source.src = URL.createObjectURL(audioUrl.current);
-      const sound = new File([audioUrl], "soundBlob", { // 파일 생성
+      const sound = new File([audioUrl], "soundBlob", {
+        // 파일 생성
         lastModified: new Date().getTime(),
         type: "audio",
       });
@@ -110,10 +117,14 @@ export default function WritePage() {
     });
   };
 
-  const uploadFile = (input) => { // 파일 선택을 통해 선택된 오디오 파일을 audio controls에서 재생 할수 있도록 한다
+  const uploadFile = (input) => {
+    // 파일 선택을 통해 선택된 오디오 파일을 audio controls에서 재생 할수 있도록 한다
     document.getElementById("controller").volume = 0.5;
     const source = document.querySelector("#controller");
     source.src = URL.createObjectURL(input.target.files[0]);
+    // const formData = new FormData();
+    // formData.append("melody", input.target.files[0]);
+    setPost({ ...post, melody: input.target.files[0] });
   };
 
   return (
@@ -169,7 +180,7 @@ export default function WritePage() {
             >
               <TextField
                 className="inputRounded"
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => onChangeTitle(e)}
                 fullWidth
                 id="title"
                 name="title"
@@ -190,7 +201,11 @@ export default function WritePage() {
               <source id="audioSrc" src=""></source>
             </audio>
             <motion.div whileHover={{ scale: 1.1 }}>
-              <Button variant="contained" sx={{ fontSize: 24 }}>
+              <Button
+                variant="contained"
+                sx={{ fontSize: 24 }}
+                onClick={() => submitPost(post)}
+              >
                 작성 완료
               </Button>
             </motion.div>

@@ -22,6 +22,13 @@ export default function MainPage() {
     localStorage.getItem("userName") || null
   );
 
+  useEffect(() => {
+    getPosts().then((res) => {
+      console.log(res.data);
+      setPosts(res.data.results);
+    });
+  }, []);
+
   const onClickLogoutButton = () => {
     cleanUserToken();
     setUserName(null);
@@ -36,53 +43,7 @@ export default function MainPage() {
     console.log(userName);
   }, [userName]);
 
-  const [posts, setPosts] = useState([
-    {
-      postID: "1",
-      postTitle: "테스트 제목1",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목2",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목3",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목4",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목5",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목6",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목7",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목8",
-      authorID: "1234",
-    },
-    {
-      postID: "1",
-      postTitle: "테스트 제목9",
-      authorID: "1234",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   console.log(posts.slice(0, 3));
 
@@ -197,7 +158,7 @@ export default function MainPage() {
             }}
           >
             {posts.slice(0, 3).map((post) => (
-              <Bulletin post={post} />
+              <Bulletin key={post.id} post={post} />
             ))}
           </Stack>
           <Stack
@@ -209,7 +170,7 @@ export default function MainPage() {
             }}
           >
             {posts.slice(3, 6).map((post) => (
-              <Bulletin post={post} />
+              <Bulletin key={post.id} post={post} />
             ))}
           </Stack>
           <Stack
@@ -221,7 +182,7 @@ export default function MainPage() {
             }}
           >
             {posts.slice(6, 9).map((post) => (
-              <Bulletin post={post} />
+              <Bulletin key={post.id} post={post} />
             ))}
           </Stack>
         </Stack>
