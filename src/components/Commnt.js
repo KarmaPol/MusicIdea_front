@@ -13,24 +13,114 @@ import Likes from "./Likes";
 import "./Bulletin.css";
 import { motion } from "framer-motion";
 
-const Comment = () => {
-  return (
-    <Box
-      sx={{
-        width: "1000px",
-        heigth: "1000px",
-        border: 1,
-        backgroundColor: "#ffffff",
-        boxShadow: "0px 0px 20px -10px #000",
-        position: "sticky",
-        // display: "flex",
+const Comment = (props) => {
+  const [comments, setComments] = useState(
+    [
+      {
+        id: "1",
+        content: "test1dddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      },
+      {
+        id: "2",
+        content: "test1",
+      },
+      {
+        id: "3",
+        content: "test1",
+      },
+      {
+        id: "4",
+        content: "test1",
+      },
+      {
+        id: "5",
+        content: "test1",
+      },
+    ].reverse()
+  );
+  const [comment, setComment] = useState("");
 
-        bottom: 0,
-        zIndex: 10,
+  const onSubmitEnter = (e) => {
+    if (e.key === "Enter") {
+      setComments([
+        {
+          id: "6",
+          content: comment,
+        },
+        ...comments,
+      ]);
+      setComment("");
+    }
+  };
+
+  console.log(comment);
+  console.log(comments);
+
+  return (
+    <Stack
+      spacing={2}
+      sx={{
+        mt: "20px",
+        ml: "20px",
       }}
     >
-      <TextField></TextField>
-    </Box>
+      <Box width="260px">
+        <TextField
+          value={comment}
+          className="inputRounded"
+          size="small"
+          fullWidth
+          placeholder="댓글 작성"
+          onKeyDown={onSubmitEnter}
+          onChange={(e) => setComment(e.target.value)}
+        />
+      </Box>
+
+      <Stack
+        sx={{
+          display: "flex",
+          width: "256px",
+          height: "155px",
+          borderRadius: "10px",
+          // border: 1,
+          borderColor: "grey.400",
+          overflow: "auto",
+        }}
+      >
+        {comments.map((c) => (
+          <>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                maxWidth: "246px",
+                mt: "5px",
+                ml: "5px",
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                }}
+              >
+                {c.id}
+              </Typography>
+
+              <Typography
+                sx={{
+                  wordBreak: "break-word",
+                  fontSize: "15px",
+                }}
+              >
+                {c.content}
+              </Typography>
+            </Stack>
+          </>
+        ))}
+      </Stack>
+    </Stack>
   );
 };
 

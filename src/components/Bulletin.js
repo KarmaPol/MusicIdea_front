@@ -16,9 +16,10 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { grey } from "@mui/material/colors";
 import Comment from "./Commnt";
 
-export default function Bulletin() {
+export default function Bulletin(props) {
   const [commentClicked, setCommentClicked] = useState(false);
 
+  console.log(props);
   return (
     <>
       <motion.div
@@ -49,7 +50,7 @@ export default function Bulletin() {
                   mt: "20px",
                 }}
               >
-                <Box
+                <Stack
                   height="25px"
                   sx={{
                     // mt: "20px",
@@ -61,9 +62,13 @@ export default function Bulletin() {
                       fontWeight: "bold",
                     }}
                   >
-                    제목
+                    {props.post.postTitle}
                   </Typography>
-                </Box>
+                  <Typography variant="subtitle2">
+                    {props.post.authorID}
+                  </Typography>
+                </Stack>
+
                 <motion.div
                   className={"bulletin"}
                   whileTap={{
@@ -114,22 +119,14 @@ export default function Bulletin() {
                   sx={{
                     mt: "20px",
                     border: 1,
+                    width: 0,
                     height: "210px",
-                    borderColor: "grey.400",
+                    maxWidth: "0px",
+                    borderColor: "grey.200",
                   }}
                 />
               )}
-              {commentClicked && (
-                <Stack
-                  spacing={2}
-                  sx={{
-                    mt: "20px",
-                    ml: "20px",
-                  }}
-                >
-                  댓글
-                </Stack>
-              )}
+              {commentClicked && <Comment postID={props.post.postID} />}
             </Stack>
           </Box>
         </motion.div>

@@ -9,3 +9,8 @@
 .like {
     margin-left : 20px;
 }
+
+.inputRounded .MuiOutlinedInput-root {
+    border-radius: 10px;
+  }
+  

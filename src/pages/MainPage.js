@@ -12,13 +12,84 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./WritePage.css";
 import Bulletin from "../components/Bulletin";
+import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
 
 export default function MainPage() {
+  const getPosts = zustandStore((state) => state.getPosts);
+  const cleanUserToken = zustandStore((state) => state.cleanUserToken);
+
+  const onClickLogoutButton = () => {
+    cleanUserToken();
+  };
+
+  const fetchPosts = async () => {
+    const posts = await getPosts;
+    setPosts(posts);
+  };
+
+  useEffect(() => {
+    // fetchPosts();
+  }, []);
+
+  const [posts, setPosts] = useState([
+    {
+      postID: "1",
+      postTitle: "테스트 제목1",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목2",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목3",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목4",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목5",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목6",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목7",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목8",
+      authorID: "1234",
+    },
+    {
+      postID: "1",
+      postTitle: "테스트 제목9",
+      authorID: "1234",
+    },
+  ]);
+
+  console.log(posts.slice(0, 3));
+
   const navigate = useNavigate();
 
   function onClickPostButton() {
     navigate("/write");
+  }
+
+  function onClickLoginButton() {
+    navigate("/login");
   }
 
   return (
@@ -75,12 +146,30 @@ export default function MainPage() {
             >
               <Avatar />
               <Typography variant="h5">user</Typography>
+              <motion.div whileHover={{ scale: 1.1 }}>
+                <Button
+                  variant="contained"
+                  sx={{ fontSize: 15 }}
+                  onClick={onClickLoginButton}
+                >
+                  로그인
+                </Button>
+              </motion.div>{" "}
+              <motion.div whileHover={{ scale: 1.1 }}>
+                <Button
+                  variant="contained"
+                  sx={{ fontSize: 15 }}
+                  onClick={onClickLogoutButton}
+                >
+                  로그아웃
+                </Button>
+              </motion.div>
             </Stack>
 
             <motion.div whileHover={{ scale: 1.1 }}>
               <Button
                 variant="contained"
-                sx={{ fontSize: 24 }}
+                sx={{ fontSize: 15 }}
                 onClick={onClickPostButton}
               >
                 작성
@@ -95,9 +184,9 @@ export default function MainPage() {
               justifyContent: "center",
             }}
           >
-            <Bulletin />
-            <Bulletin />
-            <Bulletin />
+            {posts.slice(0, 3).map((post) => (
+              <Bulletin post={post} />
+            ))}
           </Stack>
           <Stack
             direction="row"
@@ -107,9 +196,9 @@ export default function MainPage() {
               justifyContent: "center",
             }}
           >
-            <Bulletin />
-            <Bulletin />
-            <Bulletin />
+            {posts.slice(3, 6).map((post) => (
+              <Bulletin post={post} />
+            ))}
           </Stack>
           <Stack
             direction="row"
@@ -119,9 +208,9 @@ export default function MainPage() {
               justifyContent: "center",
             }}
           >
-            <Bulletin />
-            <Bulletin />
-            <Bulletin />
+            {posts.slice(6, 9).map((post) => (
+              <Bulletin post={post} />
+            ))}
           </Stack>
         </Stack>
       </Box>
