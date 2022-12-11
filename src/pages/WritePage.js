@@ -129,6 +129,7 @@ export default function WritePage() {
             //   border: 1,
             backgroundColor: "#ffffff",
             boxShadow: "0px 0px 20px -10px #000",
+            mt: "24px",
 
             borderRadius: "30px",
             display: "flex",
