@@ -1,6 +1,5 @@
 import create from "zustand";
 import axios from "axios";
-import { DiscFull } from "@mui/icons-material";
 
 export const zustandStore = create((set, get) => ({
   userToken: localStorage.getItem("userToken")
@@ -11,15 +10,15 @@ export const zustandStore = create((set, get) => ({
     localStorage.setItem("userToken", _token);
   },
   getUserToken: async (_account) => {
-    const token = await axios.post("주소", _account);
-    return token;
+    const token = await axios.post("http://3.37.33.149/user/token", _account);
+    return token.data;
   },
   cleanUserToken: () => {
     set((state) => ({ userToken: "not logined" }));
     localStorage.clear();
   },
   userSignUp: async (_account) => {
-    axios.post("주소", _account);
+    axios.post("http://3.37.33.149/user/signup", _account);
   },
 
   getPosts: async () => {
@@ -30,8 +29,10 @@ export const zustandStore = create((set, get) => ({
 
   submitPost: async (_post) => {
     const config = {
-      Authorization: "Token " + get().userToken,
+      Authorization: `Bearer ${get().userToken.access}`,
     };
+
+    console.log(config);
 
     axios.post("주소", _post, config);
   },

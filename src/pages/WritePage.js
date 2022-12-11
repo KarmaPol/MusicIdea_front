@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./WritePage.css";
 import Mypiano from "../components/MyPiano";
+import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
 
 export default function WritePage() {
@@ -22,8 +23,11 @@ export default function WritePage() {
   const [source, setSource] = useState();
   const [analyser, setAnalyser] = useState();
   const audioUrl = useRef();
+
+  // 글 작성 함수
+  const submitPost = zustandStore((state) => state.submitPost);
+
   const onRecAudio = () => {
-    
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const analyser = audioCtx.createScriptProcessor(0, 1, 1);
     setAnalyser(analyser);
@@ -34,9 +38,9 @@ export default function WritePage() {
       source.connect(analyser);
       analyser.connect(audioCtx.destination);
     }
-    
+
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      document.getElementById("recordBtn").textContent="중지";
+      document.getElementById("recordBtn").textContent = "중지";
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
       setStream(stream);
@@ -44,7 +48,6 @@ export default function WritePage() {
       makeSound(stream);
 
       analyser.onaudioprocess = function (e) {
-
         if (e.playbackTime > 300) {
           stream.getAudioTracks().forEach(function (track) {
             track.stop();
@@ -55,7 +58,7 @@ export default function WritePage() {
           audioCtx.createMediaStreamSource(stream).disconnect();
 
           mediaRecorder.ondataavailable = function (e) {
-            audioUrl.current=e.data;
+            audioUrl.current = e.data;
             setOnRec(true);
           };
         } else {
@@ -66,12 +69,12 @@ export default function WritePage() {
   };
 
   const offRecAudio = () => {
-    document.getElementById("recordBtn").textContent="녹음";
+    document.getElementById("recordBtn").textContent = "녹음";
 
     media.ondataavailable = function (e) {
-      audioUrl.current=e.data;
-      document.getElementById("controller").volume=0.5;
-      const source = document.querySelector('#controller');
+      audioUrl.current = e.data;
+      document.getElementById("controller").volume = 0.5;
+      const source = document.querySelector("#controller");
       source.src = URL.createObjectURL(audioUrl.current);
       setOnRec(true);
     };
@@ -84,19 +87,18 @@ export default function WritePage() {
 
     analyser.disconnect();
     source.disconnect();
-    
+
     const sound = new File([audioUrl], "soundBlob", {
       lastModified: new Date().getTime(),
       type: "audio",
     });
-
   };
 
   const uploadFile = (input) => {
-    document.getElementById("controller").volume=0.5;
-    const source = document.querySelector('#controller');
+    document.getElementById("controller").volume = 0.5;
+    const source = document.querySelector("#controller");
     source.src = URL.createObjectURL(input.target.files[0]);
-  }
+  };
 
   return (
     <Box
@@ -159,8 +161,15 @@ export default function WritePage() {
                 variant="outlined"
               ></TextField>
             </Box>
-            <button id="recordBtn" onClick={onRec ? onRecAudio : offRecAudio}>녹음</button>
-            <input id="fileUpload" type="file" accept="audio/*" onChange={uploadFile}></input>
+            <button id="recordBtn" onClick={onRec ? onRecAudio : offRecAudio}>
+              녹음
+            </button>
+            <input
+              id="fileUpload"
+              type="file"
+              accept="audio/*"
+              onChange={uploadFile}
+            ></input>
             <audio id="controller" controls>
               <source id="audioSrc" src=""></source>
             </audio>

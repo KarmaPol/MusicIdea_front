@@ -23,11 +23,11 @@ export default function LoginPage() {
   const getUserToken = zustandStore((state) => state.getUserToken);
   const setUserToken = zustandStore((state) => state.setUserToken);
   const userSignUp = zustandStore((state) => state.userSignUp);
-  
 
   const onClickLoginButton = async () => {
-    // const token = await getUserToken(account);
-    // setUserToken(token);
+    const token = await getUserToken(account);
+    console.log(token);
+    setUserToken(token);
     navigate("/");
   };
 
@@ -36,8 +36,8 @@ export default function LoginPage() {
   };
 
   const [account, setAccount] = useState({
-    userID: "",
-    userPW: "",
+    name: "",
+    password: "",
   });
 
   const onChangeUserAccount = (e) => {
@@ -106,11 +106,11 @@ export default function LoginPage() {
                 fullWidth
                 autoFocus
                 onChange={(e) => onChangeUserAccount(e)}
-                id="userID"
-                name="userID"
+                id="name"
+                name="name"
                 label="아이디"
                 variant="outlined"
-                autoComplete="userID"
+                autoComplete="name"
               />
             </Box>{" "}
             <Box
@@ -123,11 +123,11 @@ export default function LoginPage() {
                 required
                 fullWidth
                 onChange={(e) => onChangeUserAccount(e)}
-                id="userPW"
-                name="userPW"
+                id="password"
+                name="password"
                 label="비밀번호"
                 variant="outlined"
-                autoComplete="userPW"
+                autoComplete="password"
                 type="password"
               />
             </Box>
@@ -140,7 +140,12 @@ export default function LoginPage() {
               >
                 로그인
               </Button>
-              <Button type="submit" fullWidth variant="outlined">
+              <Button
+                type="submit"
+                fullWidth
+                variant="outlined"
+                onClick={onClickSignupButtion}
+              >
                 회원가입
               </Button>
             </Stack>
