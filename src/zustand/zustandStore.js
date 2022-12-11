@@ -43,9 +43,11 @@ export const zustandStore = create((set, get) => ({
     console.log(token);
 
     const config = {
-      Authorization: `Bearer ${token}`,
-      //   withCredentials: true,
-      "Content-Type": "multipart/form-data;",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        //   withCredentials: true,
+        "Content-Type": "multipart/form-data;",
+      },
     };
 
     console.log(config);
@@ -65,8 +67,10 @@ export const zustandStore = create((set, get) => ({
     console.log(token);
 
     const config = {
-      Authorization: `Bearer ${token}`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: false,
+      },
     };
     console.log(_comment);
     axios.post(
@@ -80,9 +84,10 @@ export const zustandStore = create((set, get) => ({
   /**댓글 삭제 */
   deleteComment: async (_commentID) => {
     const config = {
-      Authorization: "Token " + get().userToken,
+      headers: {
+        Authorization: "Token " + get().userToken,
+      },
     };
-
     axios.post(`주소/${_commentID}`, config);
   },
 }));
