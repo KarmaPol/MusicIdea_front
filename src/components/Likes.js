@@ -56,6 +56,7 @@ export default function Likes(props) {
             <FavoriteBorderIcon
               sx={{
                 color: "grey.700",
+                cursor: "pointer",
               }}
               onClick={() => {
                 onClickLikeButton();
@@ -66,6 +67,7 @@ export default function Likes(props) {
             <FavoriteIcon
               sx={{
                 color: red[600],
+                cursor: "pointer",
               }}
               onClick={() => {
                 onClickLikeButton();
@@ -73,7 +75,7 @@ export default function Likes(props) {
             ></FavoriteIcon>
           )}
         </motion.div>
-        <Typography>{likes} likes</Typography>
+        <Typography>{likes}</Typography>
       </Stack>
     </Stack>
   );

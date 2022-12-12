@@ -20,7 +20,6 @@ import "./WritePage.css";
 import Bulletin from "../components/Bulletin";
 import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
-import { ExpandMore } from "@mui/icons-material";
 
 export default function MainPage() {
   const getPosts = zustandStore((state) => state.getPosts);
@@ -247,7 +246,11 @@ export default function MainPage() {
               }}
             >
               {dividedPosts.map((post) => (
-                <Bulletin key={post.id} post={post} />
+                <Bulletin
+                  key={post.id}
+                  userName={userName}
+                  post={post}
+                />
               ))}
             </Stack>
           ))}

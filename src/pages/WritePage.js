@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./WritePage.css";
-// import Mypiano from "../components/MyPiano";
+import Swal from "sweetalert2";
 import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
 
@@ -21,18 +21,20 @@ export default function WritePage() {
   const [onRec, setOnRec] = useState(true);
   const [source, setSource] = useState();
   const [analyser, setAnalyser] = useState();
-  const [sound, setSound] = useState();
   const audioUrl = useRef();
-
-  const getUserToken = zustandStore((state) => state.getUserToken);
 
   const [post, setPost] = useState({
     title: "",
     melody: null,
+    str_tags: "",
   });
 
   const onChangeTitle = (e) => {
     setPost({ ...post, title: e.target.value });
+  };
+
+  const onChangeTag = (e) => {
+    setPost({ ...post, str_tags: e.target.value });
   };
 
   useEffect(() => console.log(post), [post]);
@@ -42,8 +44,17 @@ export default function WritePage() {
   const navigate = useNavigate();
 
   const onSubmitPost = async () => {
-    await submitPost(post);
-    setTimeout(() => navigate("/"), 1000);
+    submitPost(post)
+      .then(() => setTimeout(() => navigate("/"), 1000))
+      .catch((e) =>
+        Swal.fire({
+          icon: "error",
+          title: "작성 실패",
+          text: "잘못된 입력 양식입니다",
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      );
   };
 
   const onRecAudio = () => {
@@ -96,13 +107,14 @@ export default function WritePage() {
       document.getElementById("fileUpload").value = ""; // 파일 선택 취소
       document.getElementById("controller").volume = 0.5;
 
-      const soundFile = new File([audioUrl], "record.mp3", {
-        lastModified: new Date().getTime(),
-        type: "audio",
+      const soundFile = new File([audioUrl.current], "record.mp3", {
+        lastModifiedDate: new Date(),
+        type: "audio/mpeg",
       });
-      const source = document.querySelector("#controller");
-      source.src = URL.createObjectURL(audioUrl.current);
-      setPost({...post, melody: soundFile});
+
+      let source = document.querySelector("#controller");
+      source.src = URL.createObjectURL(soundFile);
+      setPost({ ...post, melody: soundFile });
       setOnRec(true);
     };
 
@@ -175,24 +187,67 @@ export default function WritePage() {
                 width: "600px",
               }}
             >
-              <TextField
-                className="inputRounded"
-                onChange={(e) => onChangeTitle(e)}
-                fullWidth
-                id="title"
-                name="title"
-                label="제목"
-                variant="outlined"
-              ></TextField>
+              <Stack spacing={2}>
+                <TextField
+                  className="inputRounded"
+                  onChange={(e) => onChangeTitle(e)}
+                  fullWidth
+                  id="title"
+                  name="title"
+                  label="제목"
+                  variant="outlined"
+                />
+                <TextField
+                  className="inputRounded"
+                  onChange={(e) => onChangeTag(e)}
+                  placeholder="#겨울"
+                  fullWidth
+                  id="tags"
+                  name="tags"
+                  label="태그"
+                  variant="outlined"
+                />
+              </Stack>
             </Box>
-            <button id="recordBtn" onClick={onRec ? onRecAudio : offRecAudio}>
-              녹음
-            </button>
+
             <div class="filebox">
-              <input class="fileUpload" value="첨부파일" placeholder="첨부파일"></input>
-              <label for="fileUpload">파일찾기</label> 
-              <input type="file" id="fileUpload" accept="audio/*" onChange={uploadFile}></input>
+              <input
+                class="fileUpload"
+                value="첨부파일"
+                placeholder="첨부파일"
+              ></input>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  // justifyContent: "center",
+                  mt: 1,
+                }}
+              >
+                <Button
+                  sx={{
+                    fontSize: "16px",
+                    borderRadius: "10px",
+                  }}
+                  color="secondary"
+                  variant="contained"
+                  id="recordBtn"
+                  onClick={onRec ? onRecAudio : offRecAudio}
+                >
+                  녹음
+                </Button>
+                <label for="fileUpload">파일찾기</label>
+              </Stack>
+              <input
+                type="file"
+                id="fileUpload"
+                accept="audio/*"
+                onChange={uploadFile}
+              ></input>
             </div>
+
             <audio id="controller" controls>
               <source id="audioSrc" src=""></source>
             </audio>

@@ -74,9 +74,37 @@ export const zustandStore = create((set, get) => ({
 
     formData.append("title", _post.title);
     formData.append("melody", _post.melody);
+    formData.append("str_tags", _post.str_tags);
+
     console.log(formData);
 
-    axios.post("http://3.37.33.149/post", formData, config);
+    try {
+      await axios.post("http://3.37.33.149/post", formData, config);
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  /**게시물 삭제 */
+  deletePost: async (_post_id) => {
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: false,
+        "Content-Type": "multipart/form-data;",
+      },
+    };
+
+    console.log(config);
+
+    try {
+      await axios.delete(`http://3.37.33.149/post/${_post_id}`, config);
+    } catch (e) {
+      throw e;
+    }
   },
   /**댓글 작성 */
   submitComment: async (_comment, _post_id) => {

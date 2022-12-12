@@ -14,9 +14,29 @@ import "./Bulletin.css";
 import { motion, useAnimationControls } from "framer-motion";
 import CommentIcon from "@mui/icons-material/Comment";
 import Comment from "./Commnt";
+import TagBox from "./TagBox";
+import Swal from "sweetalert2";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import { zustandStore } from "../zustand/zustandStore";
 
 export default function Bulletin(props) {
   const [commentClicked, setCommentClicked] = useState(false);
+
+  const deletePost = zustandStore((state) => state.deletePost);
+
+  const onClickDeleteButton = () => {
+    Swal.fire({
+      title: "정말 삭제하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "확인",
+      denyButtonText: "취소",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        deletePost(props.post.id).then(() => window.location.reload());
+      }
+    });
+  };
 
   return (
     <>
@@ -43,54 +63,76 @@ export default function Bulletin(props) {
           >
             <Stack direction="row">
               <Stack
-                spacing={5}
+                spacing={1}
                 sx={{
                   mt: "20px",
                 }}
               >
                 <Stack
-                  height="25px"
+                  height="50px"
                   sx={{
                     // mt: "20px",
                     ml: "20px",
                   }}
                 >
-                  <Typography
+                  <Box
                     sx={{
-                      fontWeight: "bold",
+                      display: "flex",
+                      justifyContent: "space-between",
                     }}
                   >
-                    {props.post.title}
-                  </Typography>
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {props.post.title}
+                    </Typography>
+                    {props.userName === props.post.author && (
+                      <motion.div
+                        className={"bulletin"}
+                        whileTap={{
+                          scale: 0.9,
+                          opacity: 0.6,
+                        }}
+                      >
+                        <DeleteIcon
+                          onClick={() => {
+                            onClickDeleteButton();
+                          }}
+                          sx={{
+                            cursor: "pointer",
+                            mr: "20px",
+                            color: "grey.600",
+                          }}
+                        />
+                      </motion.div>
+                    )}
+                  </Box>
+
                   <Typography variant="subtitle2">
                     {props.post.author}
                   </Typography>
                 </Stack>
 
-                <motion.div
-                  className={"bulletin"}
-                  whileTap={{
-                    scale: 0.94,
-                    opacity: 0.6,
+                <Box
+                  height="100px"
+                  width="300px"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <Box
-                    height="85px"
-                    width="300px"
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <audio
-                      className="audio"
-                      id="controller"
-                      controls
-                      src={props.post.melody}
-                    />
-                  </Box>
-                </motion.div>
+                  <audio
+                    className="audio"
+                    id="controller"
+                    controls
+                    src={props.post.melody}
+                  />
+                </Box>
+                <TagBox tags={props.post.tags} />
+
                 <Stack
                   direction="row"
                   spacing={1}
@@ -112,12 +154,16 @@ export default function Bulletin(props) {
                       opacity: 0.6,
                     }}
                   >
-                    <CommentIcon
-                      onClick={() => setCommentClicked((ex) => !ex)}
-                      sx={{
-                        color: "grey.700",
-                      }}
-                    />
+                    <Stack direction="row" spacing={1}>
+                      <CommentIcon
+                        onClick={() => setCommentClicked((ex) => !ex)}
+                        sx={{
+                          color: "grey.700",
+                          cursor: "pointer",
+                        }}
+                      />
+                      <Typography>{props.post.comment_cnt}</Typography>
+                    </Stack>
                   </motion.div>
                 </Stack>
               </Stack>
