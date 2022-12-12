@@ -206,7 +206,7 @@ export default function WritePage() {
             <motion.div whileHover={{ scale: 1.1 }}>
               <Button
                 variant="contained"
-                sx={{ fontSize: 24 }}
+                sx={{ fontSize: 24, borderRadius: "10px" }}
                 onClick={onSubmitPost}
               >
                 작성 완료

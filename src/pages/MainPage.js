@@ -195,7 +195,7 @@ export default function MainPage() {
             <Stack direction="row" spacing={3}>
               <TextField
                 className="inputRounded"
-                placeholder="#잔잔한 #몽환적인"
+                placeholder="검색"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 // fullWidth
