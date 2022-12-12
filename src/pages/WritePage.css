@@ -41,6 +41,19 @@
     box-shadow: 0px 0px 20px -12px #000;
 }
 
+.recordButton {
+    box-shadow: 0px 0px 20px -12px #000;
+    font-family: "NanumSquareNeo-bRg";
+    background-color: #F6A736;
+    width: 70px;
+    border-radius: 10px;
+    height: 40px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #fff;
+
+}
+
 .filebox input[type="file"] {
     position: absolute;
     width: 0;

@@ -22,6 +22,7 @@ import { zustandStore } from "../zustand/zustandStore";
 
 export default function Bulletin(props) {
   const [commentClicked, setCommentClicked] = useState(false);
+  const [commentCount, setCommentCount] = useState(props.post.comment_cnt || 0);
 
   const deletePost = zustandStore((state) => state.deletePost);
 
@@ -162,7 +163,7 @@ export default function Bulletin(props) {
                           cursor: "pointer",
                         }}
                       />
-                      <Typography>{props.post.comment_cnt}</Typography>
+                      <Typography>{commentCount}</Typography>
                     </Stack>
                   </motion.div>
                 </Stack>
@@ -180,7 +181,10 @@ export default function Bulletin(props) {
                       borderColor: "grey.200",
                     }}
                   />
-                  <Comment postID={props.post.id} />
+                  <Comment
+                    postID={props.post.id}
+                    setCommentCount={setCommentCount}
+                  />
                 </>
               )}
             </Stack>

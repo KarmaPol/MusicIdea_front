@@ -112,7 +112,7 @@ export default function MainPage() {
       sx={{
         width: "100vw",
         minHeight: "2000px",
-        backgroundColor: "#6495ED",
+        backgroundColor: "#9793FF",
         padding: "50px",
         boxSizing: "border-box",
         display: "flex",
@@ -154,6 +154,20 @@ export default function MainPage() {
               boxShadow: "0px 0px 20px -10px #000",
             }}
           >
+            <Stack direction="row" spacing={3}>
+              <TextField
+                className="inputRounded"
+                placeholder="검색"
+                value={search}
+                sx={{
+                  width: "350px",
+                }}
+                onChange={(e) => setSearch(e.target.value)}
+                // fullWidth
+                // onKeyDown={onSubmitEnter}
+                size="small"
+              />
+            </Stack>
             <Stack
               direction="row"
               spacing={2}
@@ -171,6 +185,7 @@ export default function MainPage() {
               {!userName && (
                 <motion.div whileHover={{ scale: 1.1 }}>
                   <Button
+                    color="secondary"
                     variant="contained"
                     sx={{ fontSize: 15, borderRadius: "10px" }}
                     onClick={onClickLoginButton}
@@ -182,6 +197,7 @@ export default function MainPage() {
               {userName && (
                 <motion.div whileHover={{ scale: 1.1 }}>
                   <Button
+                    color="secondary"
                     variant="contained"
                     sx={{ fontSize: 15, borderRadius: "10px" }}
                     onClick={onClickLogoutButton}
@@ -190,26 +206,18 @@ export default function MainPage() {
                   </Button>
                 </motion.div>
               )}
-            </Stack>
-            <Stack direction="row" spacing={3}>
-              <TextField
-                className="inputRounded"
-                placeholder="검색"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                // fullWidth
-                // onKeyDown={onSubmitEnter}
-                size="small"
-              />
-              <motion.div whileHover={{ scale: 1.1 }}>
-                <Button
-                  variant="contained"
-                  sx={{ fontSize: 15, borderRadius: "10px" }}
-                  onClick={onClickPostButton}
-                >
-                  작성
-                </Button>
-              </motion.div>
+              {userName && (
+                <motion.div whileHover={{ scale: 1.1 }}>
+                  <Button
+                    color="secondary"
+                    variant="outlined"
+                    sx={{ fontSize: 15, borderRadius: "10px" }}
+                    onClick={onClickPostButton}
+                  >
+                    작성
+                  </Button>
+                </motion.div>
+              )}
             </Stack>
           </Box>
           {searchMsg && (
@@ -246,11 +254,7 @@ export default function MainPage() {
               }}
             >
               {dividedPosts.map((post) => (
-                <Bulletin
-                  key={post.id}
-                  userName={userName}
-                  post={post}
-                />
+                <Bulletin key={post.id} userName={userName} post={post} />
               ))}
             </Stack>
           ))}
@@ -280,6 +284,7 @@ export default function MainPage() {
                 >
                   <Button
                     fullWidth
+                    color="secondary"
                     variant="outlined"
                     sx={{
                       color: "black",

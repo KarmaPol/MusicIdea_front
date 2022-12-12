@@ -27,10 +27,12 @@ const Comment = (props) => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
 
-
   const onSubmitEnter = (e) => {
     if (e.key === "Enter") {
-      submitComment(comment, props.postID).then(setComment(""));
+      submitComment(comment, props.postID).then(() => {
+        setComment("");
+        props.setCommentCount((ex) => ex + 1);
+      });
     }
   };
 
@@ -39,7 +41,7 @@ const Comment = (props) => {
       console.log(res);
       setComments(res.data.reverse());
     });
-  }, [comment, comments]);
+  }, [comment]);
 
   console.log(comments);
 

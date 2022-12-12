@@ -141,7 +141,7 @@ export default function WritePage() {
       sx={{
         width: "100vw",
         minHeight: "2000px",
-        backgroundColor: "#6495ED",
+        backgroundColor: "#9793FF",
         padding: "50px",
         boxSizing: "border-box",
         display: "flex",
@@ -226,18 +226,13 @@ export default function WritePage() {
                   mt: 1,
                 }}
               >
-                <Button
-                  sx={{
-                    fontSize: "16px",
-                    borderRadius: "10px",
-                  }}
-                  color="secondary"
-                  variant="contained"
+                <button
+                  className="recordButton"
                   id="recordBtn"
                   onClick={onRec ? onRecAudio : offRecAudio}
                 >
                   녹음
-                </Button>
+                </button>
                 <label for="fileUpload">파일찾기</label>
               </Stack>
               <input
@@ -253,6 +248,7 @@ export default function WritePage() {
             </audio>
             <motion.div whileHover={{ scale: 1.1 }}>
               <Button
+                color="secondary"
                 variant="contained"
                 sx={{ fontSize: 24, borderRadius: "10px" }}
                 onClick={onSubmitPost}

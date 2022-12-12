@@ -119,16 +119,16 @@ export const zustandStore = create((set, get) => ({
     };
     console.log(_comment);
 
-    if (token === null) {
-      return;
-    } else {
-      axios.post(
+    try {
+      await axios.post(
         `http://3.37.33.149/post/${_post_id}/comment`,
         {
           content: _comment,
         },
         config
       );
+    } catch (e) {
+      throw e;
     }
   },
   /**댓글 가져오기 */

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { zustandStore } from "../zustand/zustandStore";
-
+import Swal from "sweetalert2";
 import "./WritePage.css";
 import { motion } from "framer-motion";
 
@@ -31,7 +31,13 @@ export default function LoginPage() {
       await setUserToken(token);
       navigate("/");
     } catch (error) {
-      alert("로그인 실패");
+      Swal.fire({
+        icon: "error",
+        title: "로그인 실패",
+        text: "잘못된 아이디, 비밀번호를 입력하였습니다",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -58,7 +64,7 @@ export default function LoginPage() {
       sx={{
         width: "100vw",
         minHeight: "2000px",
-        backgroundColor: "#6495ED",
+        backgroundColor: "#9793FF",
         padding: "50px",
         boxSizing: "border-box",
         display: "flex",
@@ -139,6 +145,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 fullWidth
+                color="secondary"
                 variant="contained"
                 onClick={onClickLoginButton}
               >
@@ -147,6 +154,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 fullWidth
+                color="secondary"
                 variant="outlined"
                 onClick={onClickSignupButtion}
               >
