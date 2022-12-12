@@ -89,21 +89,20 @@ export default function WritePage() {
   };
 
   const offRecAudio = () => {
-    // 중단 버튼 클릭 시 함수 실행 녹음 종료
     document.getElementById("recordBtn").textContent = "녹음";
 
     media.ondataavailable = function (e) {
-      // e.data : 녹음된 파일 데이터로 보시면 됩니다
-      audioUrl.current = e.data;
-      document.getElementById("controller").volume = 0.5; // 92 ~ 94번째 줄은 uploadFile과 같이 녹음된 파일을 audio controls에서 재생할 수 있도록 한다
-      const source = document.querySelector("#controller");
-      source.src = URL.createObjectURL(audioUrl.current);
-      const sound = new File([audioUrl], "soundBlob", {
-        // 파일 생성
+      audioUrl.current = e.data; // e.data = blob
+      document.getElementById("fileUpload").value = ""; // 파일 선택 취소
+      document.getElementById("controller").volume = 0.5;
+
+      const soundFile = new File([audioUrl], "record.mp3", {
         lastModified: new Date().getTime(),
         type: "audio",
       });
-      setSound(sound);
+      const source = document.querySelector("#controller");
+      source.src = URL.createObjectURL(audioUrl.current);
+      setPost({...post, melody: soundFile});
       setOnRec(true);
     };
 
@@ -115,18 +114,13 @@ export default function WritePage() {
 
     analyser.disconnect();
     source.disconnect();
-
-    const sound = new File([audioUrl], "soundBlob", {
-      lastModified: new Date().getTime(),
-      type: "audio",
-    });
   };
 
   const uploadFile = (input) => {
-    // 파일 선택을 통해 선택된 오디오 파일을 audio controls에서 재생 할수 있도록 한다
     document.getElementById("controller").volume = 0.5;
     const source = document.querySelector("#controller");
-    source.src = URL.createObjectURL(input.target.files[0]);
+    var url = URL.createObjectURL(input.target.files[0]);
+    source.src = url;
     setPost({ ...post, melody: input.target.files[0] });
   };
 
@@ -194,12 +188,11 @@ export default function WritePage() {
             <button id="recordBtn" onClick={onRec ? onRecAudio : offRecAudio}>
               녹음
             </button>
-            <input
-              id="fileUpload"
-              type="file"
-              accept="audio/*"
-              onChange={uploadFile}
-            ></input>
+            <div class="filebox">
+              <input class="fileUpload" value="첨부파일" placeholder="첨부파일"></input>
+              <label for="fileUpload">파일찾기</label> 
+              <input type="file" id="fileUpload" accept="audio/*" onChange={uploadFile}></input>
+            </div>
             <audio id="controller" controls>
               <source id="audioSrc" src=""></source>
             </audio>
