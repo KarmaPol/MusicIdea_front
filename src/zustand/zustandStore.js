@@ -33,9 +33,26 @@ export const zustandStore = create((set, get) => ({
   },
   /**게시물 9개 받기 */
   getPosts: async (_nextURL) => {
-    const posts = await axios.get(_nextURL || "http://3.37.33.149/posts");
+    const token = localStorage.getItem("userToken");
+    console.log(token);
 
-    return posts;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: false,
+      },
+    };
+
+    if (token === null) {
+      const posts = await axios.get(_nextURL || "http://3.37.33.149/posts");
+      return posts;
+    } else {
+      const posts = await axios.get(
+        _nextURL || "http://3.37.33.149/posts",
+        config
+      );
+      return posts;
+    }
   },
   /**게시물 작성 */
   submitPost: async (_post) => {
@@ -62,7 +79,7 @@ export const zustandStore = create((set, get) => ({
     axios.post("http://3.37.33.149/post", formData, config);
   },
   /**댓글 작성 */
-  submitComment: (_comment, _post_id) => {
+  submitComment: async (_comment, _post_id) => {
     const token = localStorage.getItem("userToken");
     console.log(token);
 
@@ -73,15 +90,32 @@ export const zustandStore = create((set, get) => ({
       },
     };
     console.log(_comment);
-    axios.post(
-      `http://3.37.33.149/post/${_post_id}/comment`,
-      {
-        content: _comment,
-      },
-      config
-    );
+
+    if (token === null) {
+      return;
+    } else {
+      axios.post(
+        `http://3.37.33.149/post/${_post_id}/comment`,
+        {
+          content: _comment,
+        },
+        config
+      );
+    }
   },
-  /**댓글 삭제 */
+  /**댓글 가져오기 */
+  getComments: async (_post_id) => {
+    try {
+      const comments = await axios.get(
+        `http://3.37.33.149/post/${_post_id}/comments`
+      );
+
+      return comments;
+    } catch (e) {
+      throw e;
+    }
+  },
+  /**댓글 삭제 (미구현)*/
   deleteComment: async (_commentID) => {
     const config = {
       headers: {
@@ -89,5 +123,32 @@ export const zustandStore = create((set, get) => ({
       },
     };
     axios.post(`주소/${_commentID}`, config);
+  },
+  /**좋아요 누르기 */
+  submitLike: async (_post_id) => {
+    const token = localStorage.getItem("userToken");
+    console.log(token);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: false,
+      },
+    };
+
+    const like_count = await axios.get(
+      `http://3.37.33.149/post/${_post_id}/like`,
+      config
+    );
+
+    return like_count;
+  },
+  /**검색 */
+  submitSearch: async (_text) => {
+    const searched_posts = await axios.get(
+      `http://3.37.33.149/posts?search=${_text}`
+    );
+
+    return searched_posts;
   },
 }));

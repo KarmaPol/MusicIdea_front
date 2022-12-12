@@ -12,12 +12,30 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { orange, red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { motion } from "framer-motion";
+import { zustandStore } from "../zustand/zustandStore";
 
 import "../App.css";
 
-export default function Likes() {
-  const [likes, setlikes] = useState(0);
-  const [likeClicked, setLikeClicked] = useState(false);
+export default function Likes(props) {
+  const [likes, setlikes] = useState(props.like_count);
+  const [likeClicked, setLikeClicked] = useState(props.is_liked);
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName") || null
+  );
+
+  const submitLike = zustandStore((state) => state.submitLike);
+
+  const onClickLikeButton = () => {
+    if (userName !== null) {
+      submitLike(props.post_id).then((res) => {
+        setLikeClicked((ex) => !ex);
+        setlikes(res.data.like_count);
+        console.log(res.data);
+      });
+    }
+  };
+
+  useEffect(() => {});
 
   return (
     <Stack
@@ -40,7 +58,7 @@ export default function Likes() {
                 color: "grey.700",
               }}
               onClick={() => {
-                setLikeClicked((ex) => !ex);
+                onClickLikeButton();
               }}
             ></FavoriteBorderIcon>
           )}
@@ -50,12 +68,12 @@ export default function Likes() {
                 color: red[600],
               }}
               onClick={() => {
-                setLikeClicked((ex) => !ex);
+                onClickLikeButton();
               }}
             ></FavoriteIcon>
           )}
         </motion.div>
-        <p>{likes} likes</p>
+        <Typography>{likes} likes</Typography>
       </Stack>
     </Stack>
   );

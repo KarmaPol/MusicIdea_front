@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, {
+  Children,
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+} from "react";
 import {
   Container,
   Typography,
@@ -16,49 +22,25 @@ import { zustandStore } from "../zustand/zustandStore";
 
 const Comment = (props) => {
   const submitComment = zustandStore((state) => state.submitComment);
+  const getComments = zustandStore((state) => state.getComments);
 
-  const [comments, setComments] = useState(
-    [
-      {
-        id: "1",
-        content: "test1dddddddddddddddddddddddddddddddddddddddddddddddddddd",
-      },
-      {
-        id: "2",
-        content: "test1",
-      },
-      {
-        id: "3",
-        content: "test1",
-      },
-      {
-        id: "4",
-        content: "test1",
-      },
-      {
-        id: "5",
-        content: "test1",
-      },
-    ].reverse()
-  );
+  const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
+
 
   const onSubmitEnter = (e) => {
     if (e.key === "Enter") {
-      // setComments([
-      //   {
-      //     id: "6",
-      //     content: comment,
-      //   },
-      //   ...comments,
-      // ]);
-      // setComment("");
-      console.log(props.postID);
-      submitComment(comment, props.postID);
+      submitComment(comment, props.postID).then(setComment(""));
     }
   };
 
-  console.log(comment);
+  useEffect(() => {
+    getComments(props.postID).then((res) => {
+      console.log(res);
+      setComments(res.data.reverse());
+    });
+  }, [comment, comments]);
+
   console.log(comments);
 
   return (
@@ -92,38 +74,40 @@ const Comment = (props) => {
           overflow: "auto",
         }}
       >
-        {comments.map((c) => (
-          <>
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                maxWidth: "246px",
-                mt: "5px",
-                ml: "5px",
-              }}
-            >
-              <Typography
-                variant="body1"
+        {Children.toArray(
+          comments.map((c) => (
+            <>
+              <Stack
+                direction="row"
+                spacing={1}
                 sx={{
-                  fontWeight: "bold",
-                  fontSize: "15px",
+                  maxWidth: "246px",
+                  mt: "5px",
+                  ml: "5px",
                 }}
               >
-                {c.id}
-              </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}
+                >
+                  {c.author}
+                </Typography>
 
-              <Typography
-                sx={{
-                  wordBreak: "break-word",
-                  fontSize: "15px",
-                }}
-              >
-                {c.content}
-              </Typography>
-            </Stack>
-          </>
-        ))}
+                <Typography
+                  sx={{
+                    wordBreak: "break-word",
+                    fontSize: "15px",
+                  }}
+                >
+                  {c.content}
+                </Typography>
+              </Stack>
+            </>
+          ))
+        )}
       </Stack>
     </Stack>
   );

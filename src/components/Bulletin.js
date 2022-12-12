@@ -11,9 +11,8 @@ import {
 } from "@mui/material";
 import Likes from "./Likes";
 import "./Bulletin.css";
-import { motion } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import CommentIcon from "@mui/icons-material/Comment";
-import { grey } from "@mui/material/colors";
 import Comment from "./Commnt";
 
 export default function Bulletin(props) {
@@ -100,7 +99,11 @@ export default function Bulletin(props) {
                     ml: "20px",
                   }}
                 >
-                  <Likes />
+                  <Likes
+                    like_count={props.post.like_count}
+                    post_id={props.post.id}
+                    is_liked={props.post.is_liked}
+                  />
 
                   <motion.div
                     className={"bulletin"}
@@ -118,19 +121,22 @@ export default function Bulletin(props) {
                   </motion.div>
                 </Stack>
               </Stack>
+
               {commentClicked && (
-                <Box
-                  sx={{
-                    mt: "20px",
-                    border: 1,
-                    width: 0,
-                    height: "210px",
-                    maxWidth: "0px",
-                    borderColor: "grey.200",
-                  }}
-                />
+                <>
+                  <Box
+                    sx={{
+                      mt: "20px",
+                      border: 1,
+                      width: 0,
+                      height: "210px",
+                      maxWidth: "0px",
+                      borderColor: "grey.200",
+                    }}
+                  />
+                  <Comment postID={props.post.id} />
+                </>
               )}
-              {commentClicked && <Comment postID={props.post.id} />}
             </Stack>
           </Box>
         </motion.div>

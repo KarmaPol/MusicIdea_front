@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  Children,
+} from "react";
 import {
   Container,
   Typography,
@@ -19,6 +25,7 @@ import { ExpandMore } from "@mui/icons-material";
 export default function MainPage() {
   const getPosts = zustandStore((state) => state.getPosts);
   const cleanUserToken = zustandStore((state) => state.cleanUserToken);
+  const submitSearch = zustandStore((state) => state.submitSearch);
   const [userName, setUserName] = useState(
     localStorage.getItem("userName") || null
   );
@@ -30,16 +37,40 @@ export default function MainPage() {
   const [chunkedPosts, setChunkedPosts] = useState([]);
   const [pageOffset, setPageOffset] = useState([0]);
 
-  console.log(nextURL);
+  const [searchMsg, setSearchMsg] = useState(null);
+
+  const [search, setSearch] = useState("");
+
+  console.log(search);
 
   useEffect(() => {
-    getPosts(nextURL).then((res) => {
-      const nextPosts = res.data.results;
-      setNextURL(res.data.next);
-      setPosts((ex) => [...ex, ...nextPosts]);
-    });
+    setSearchMsg(null);
+    if (search !== "") {
+      if (search.length === 1) {
+        setPosts([]);
+        setNextURL(null);
+        setSearchMsg("2글자 이상 검색해주세요");
+      } else {
+        submitSearch(search).then((res) => {
+          const searched_posts = res.data.results;
+          console.log(res);
+          setNextURL(res.data.next);
+          setPosts(searched_posts);
+          if (searched_posts.length === 0) {
+            setSearchMsg(`"${search}" 검색 결과가 없습니다.`);
+          }
+        });
+      }
+    } else {
+      getPosts(nextURL).then((res) => {
+        const nextPosts = res.data.results;
+        setNextURL(res.data.next);
+        setPosts((ex) => [...ex, ...nextPosts]);
+      });
+    }
+
     console.log(posts);
-  }, [nextButtonClicked]);
+  }, [nextButtonClicked, search]);
 
   useEffect(() => {
     setChunkedPosts(chunkArray(posts));
@@ -142,7 +173,7 @@ export default function MainPage() {
                 <motion.div whileHover={{ scale: 1.1 }}>
                   <Button
                     variant="contained"
-                    sx={{ fontSize: 15 }}
+                    sx={{ fontSize: 15, borderRadius: "10px" }}
                     onClick={onClickLoginButton}
                   >
                     로그인
@@ -153,7 +184,7 @@ export default function MainPage() {
                 <motion.div whileHover={{ scale: 1.1 }}>
                   <Button
                     variant="contained"
-                    sx={{ fontSize: 15 }}
+                    sx={{ fontSize: 15, borderRadius: "10px" }}
                     onClick={onClickLogoutButton}
                   >
                     로그아웃
@@ -161,20 +192,53 @@ export default function MainPage() {
                 </motion.div>
               )}
             </Stack>
-
-            <motion.div whileHover={{ scale: 1.1 }}>
-              <Button
-                variant="contained"
-                sx={{ fontSize: 15 }}
-                onClick={onClickPostButton}
-              >
-                작성
-              </Button>
-            </motion.div>
+            <Stack direction="row" spacing={3}>
+              <TextField
+                className="inputRounded"
+                placeholder="#잔잔한 #몽환적인"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                // fullWidth
+                // onKeyDown={onSubmitEnter}
+                size="small"
+              />
+              <motion.div whileHover={{ scale: 1.1 }}>
+                <Button
+                  variant="contained"
+                  sx={{ fontSize: 15, borderRadius: "10px" }}
+                  onClick={onClickPostButton}
+                >
+                  작성
+                </Button>
+              </motion.div>
+            </Stack>
           </Box>
+          {searchMsg && (
+            <Box
+              sx={{
+                borderRadius: "30px",
+                width: "800px",
+                height: "250px",
+                backgroundColor: "#ffffff",
+                boxShadow: "0px 0px 20px -10px #000",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "25px",
+                }}
+              >
+                {searchMsg}
+              </Typography>
+            </Box>
+          )}
 
-          {chunkedPosts.map((dividedPosts) => (
+          {chunkedPosts.map((dividedPosts, idx) => (
             <Stack
+              key={idx}
               direction="row"
               spacing={6}
               sx={{
@@ -183,7 +247,7 @@ export default function MainPage() {
               }}
             >
               {dividedPosts.map((post) => (
-                <Bulletin post={post} />
+                <Bulletin key={post.id} post={post} />
               ))}
             </Stack>
           ))}

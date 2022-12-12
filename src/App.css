@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  font-family: "NanumSquareNeo-bRg";
 }
 
 .App-logo {
@@ -35,4 +35,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@font-face {
+  font-family: "NanumSquareNeo-bRg";
+  src: url("./font/NanumSquareNeo-bRg.ttf");
 }
