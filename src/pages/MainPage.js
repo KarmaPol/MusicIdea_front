@@ -20,6 +20,7 @@ import "./WritePage.css";
 import Bulletin from "../components/Bulletin";
 import { zustandStore } from "../zustand/zustandStore";
 import { motion } from "framer-motion";
+import Footer from "../components/Footer";
 
 export default function MainPage() {
   const getPosts = zustandStore((state) => state.getPosts);
@@ -108,202 +109,206 @@ export default function MainPage() {
   }
 
   return (
-    <Box
-      sx={{
-        width: "100vw",
-        minHeight: "2000px",
-        backgroundColor: "#9793FF",
-        padding: "50px",
-        boxSizing: "border-box",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
+    <>
       <Box
-        className="mainbox"
         sx={{
-          width: "1400px",
+          width: "100vw",
           minHeight: "2000px",
-          // border: 1,
-          // backgroundColor: "#ffffff",
-          borderRadius: "30px",
+          backgroundColor: "#9793FF",
+          padding: "50px",
+          boxSizing: "border-box",
           display: "flex",
           justifyContent: "center",
         }}
       >
-        <Stack
-          spacing={3}
+        <Box
+          className="mainbox"
           sx={{
-            width: "1000px",
-            mt: "24px",
+            width: "1400px",
+            minHeight: "2000px",
+            // border: 1,
+            // backgroundColor: "#ffffff",
+            borderRadius: "30px",
             display: "flex",
-            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Box
+          <Stack
+            spacing={3}
             sx={{
               width: "1000px",
-              borderRadius: "10px",
-              padding: "10px",
-              boxSizing: "border-box",
-              backgroundColor: "#ffffff",
+              mt: "24px",
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
               alignItems: "center",
-              boxShadow: "0px 0px 20px -10px #000",
             }}
           >
-            <Stack direction="row" spacing={3}>
-              <TextField
-                className="inputRounded"
-                placeholder="검색"
-                value={search}
-                sx={{
-                  width: "350px",
-                }}
-                onChange={(e) => setSearch(e.target.value)}
-                // fullWidth
-                // onKeyDown={onSubmitEnter}
-                size="small"
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {userName && (
-                <>
-                  <Avatar />
-                  <Typography variant="h5">{userName}</Typography>
-                </>
-              )}
-              {!userName && (
-                <motion.div whileHover={{ scale: 1.1 }}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    sx={{ fontSize: 15, borderRadius: "10px" }}
-                    onClick={onClickLoginButton}
-                  >
-                    로그인
-                  </Button>
-                </motion.div>
-              )}
-              {userName && (
-                <motion.div whileHover={{ scale: 1.1 }}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    sx={{ fontSize: 15, borderRadius: "10px" }}
-                    onClick={onClickLogoutButton}
-                  >
-                    로그아웃
-                  </Button>
-                </motion.div>
-              )}
-              {userName && (
-                <motion.div whileHover={{ scale: 1.1 }}>
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    sx={{ fontSize: 15, borderRadius: "10px" }}
-                    onClick={onClickPostButton}
-                  >
-                    작성
-                  </Button>
-                </motion.div>
-              )}
-            </Stack>
-          </Box>
-          {searchMsg && (
             <Box
               sx={{
-                borderRadius: "30px",
-                width: "800px",
-                height: "250px",
+                width: "1000px",
+                borderRadius: "10px",
+                padding: "10px",
+                boxSizing: "border-box",
                 backgroundColor: "#ffffff",
-                boxShadow: "0px 0px 20px -10px #000",
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
                 alignItems: "center",
+                boxShadow: "0px 0px 20px -10px #000",
               }}
             >
-              <Typography
+              <Stack direction="row" spacing={3}>
+                <TextField
+                  className="inputRounded"
+                  placeholder="검색"
+                  value={search}
+                  sx={{
+                    width: "350px",
+                  }}
+                  onChange={(e) => setSearch(e.target.value)}
+                  // fullWidth
+                  // onKeyDown={onSubmitEnter}
+                  size="small"
+                />
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={2}
                 sx={{
-                  fontSize: "25px",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                {searchMsg}
-              </Typography>
+                {userName && (
+                  <>
+                    <Avatar />
+                    <Typography variant="h5">{userName}</Typography>
+                  </>
+                )}
+                {!userName && (
+                  <motion.div whileHover={{ scale: 1.1 }}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      sx={{ fontSize: 15, borderRadius: "10px" }}
+                      onClick={onClickLoginButton}
+                    >
+                      로그인
+                    </Button>
+                  </motion.div>
+                )}
+                {userName && (
+                  <motion.div whileHover={{ scale: 1.1 }}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      sx={{ fontSize: 15, borderRadius: "10px" }}
+                      onClick={onClickLogoutButton}
+                    >
+                      로그아웃
+                    </Button>
+                  </motion.div>
+                )}
+                {userName && (
+                  <motion.div whileHover={{ scale: 1.1 }}>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      sx={{ fontSize: 15, borderRadius: "10px" }}
+                      onClick={onClickPostButton}
+                    >
+                      작성
+                    </Button>
+                  </motion.div>
+                )}
+              </Stack>
             </Box>
-          )}
-
-          {chunkedPosts.map((dividedPosts, idx) => (
-            <Stack
-              key={idx}
-              direction="row"
-              spacing={6}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {dividedPosts.map((post) => (
-                <Bulletin key={post.id} userName={userName} post={post} />
-              ))}
-            </Stack>
-          ))}
-
-          {nextURL !== null && (
-            <motion.div
-              className={"mainbox2"}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.5,
-                ease: [0, 0.71, 0.2, 1.01],
-              }}
-            >
-              <motion.div whileHover={{ scale: 1.05 }}>
-                <Box
+            {searchMsg && (
+              <Box
+                sx={{
+                  borderRadius: "30px",
+                  width: "800px",
+                  height: "250px",
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0px 0px 20px -10px #000",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
                   sx={{
-                    width: "600px",
-                    borderRadius: "5px",
-                    backgroundColor: "white",
-                    display: "flex",
-                    alignItems: "center",
-                    borderRadius: "20px",
-                    boxShadow: "0px 0px 20px -10px #000",
+                    fontSize: "25px",
                   }}
                 >
-                  <Button
-                    fullWidth
-                    color="secondary"
-                    variant="outlined"
+                  {searchMsg}
+                </Typography>
+              </Box>
+            )}
+
+            {chunkedPosts.map((dividedPosts, idx) => (
+              <Stack
+                key={idx}
+                direction="row"
+                spacing={6}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {dividedPosts.map((post) => (
+                  <Bulletin key={post.id} userName={userName} post={post} />
+                ))}
+              </Stack>
+            ))}
+
+            {nextURL !== null && (
+              <motion.div
+                className={"mainbox2"}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5,
+                  ease: [0, 0.71, 0.2, 1.01],
+                }}
+              >
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Box
                     sx={{
-                      color: "black",
-                      // fontWeight: "bold",
-                      fontSize: "20px",
+                      width: "600px",
+                      borderRadius: "5px",
+                      backgroundColor: "white",
+                      display: "flex",
+                      alignItems: "center",
                       borderRadius: "20px",
-                    }}
-                    onClick={() => {
-                      setNextButtonClicked((ex) => !ex);
+                      boxShadow: "0px 0px 20px -10px #000",
                     }}
                   >
-                    more
-                  </Button>
-                </Box>
+                    <Button
+                      fullWidth
+                      color="secondary"
+                      variant="outlined"
+                      sx={{
+                        color: "black",
+                        // fontWeight: "bold",
+                        fontSize: "20px",
+                        borderRadius: "20px",
+                      }}
+                      onClick={() => {
+                        setNextButtonClicked((ex) => !ex);
+                      }}
+                    >
+                      more
+                    </Button>
+                  </Box>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </Stack>
+            )}
+            <Box minHeight="300px" />
+          </Stack>
+        </Box>
       </Box>
-    </Box>
+      <Footer />
+    </>
   );
 }
